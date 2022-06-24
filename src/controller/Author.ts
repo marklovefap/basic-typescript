@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Author, { IAuthor } from '../model/Author'
+import Book from "../model/Book";
 
 export async function showAuthor<IAuthor>(id: string) {
     
@@ -38,5 +39,25 @@ export async function deleteAuthor<IAuthor>(id: string) {
     const author = await Author.findByIdAndDelete(id)
 
     return `the author id: ${author?._id} and name: ${author?.name} has been deleted`
+}
+
+export async function addBook(id: string, books: string[] ) {
+    
+    const author = await Author.findById(id) 
+    for(let i = 0; i<books.length; i++) {
+        await author?.books.push(books[i])
+    }
+    await author?.save()
+
+    return author
+}
+
+export async function books(books: string[]) {
+    const book = []
+    for(let i = 0; i<books.length; i++) {
+        await book.push(await Book.findById(books[i]))
+    }
+
+    return book
 }
 
